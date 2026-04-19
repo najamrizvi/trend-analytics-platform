@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from app.routes import router
 
-app = FastAPI(title="Trend Analytics Platform")
-
-app.include_router(router)
+app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"status": "running", "message": "Trend Analytics API running 🚀"}
+    return {"message": "API is running on Railway 🚀"}
+
+app.include_router(router)
