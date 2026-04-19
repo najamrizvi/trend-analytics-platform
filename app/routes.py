@@ -59,28 +59,26 @@ def search(q: str = Query(None)):
     }
 
 @router.get("/analytics/summary")
-def get_analytics_summary():
-    try:
-        total = processed_collection.count_documents({})
-        positive = processed_collection.count_documents({"sentiment": "positive"})
-        negative = processed_collection.count_documents({"sentiment": "negative"})
-        neutral = processed_collection.count_documents({"sentiment": "neutral"})
-        
-        data = list(processed_collection.find({}, {"_id": 0, "keywords": 1}))
-        from collections import Counter
-        all_keywords = []
-        for x in data:
-            all_keywords.extend(x.get("keywords", []))
-        top_keywords = [word for word, _ in Counter(all_keywords).most_common(5)]
-        
-        return {
-            "total_articles": total,
-            "sentiment_counts": {
-                "positive": positive,
-                "negative": negative,
-                "neutral": neutral
-            },
-            "top_trending_keywords": top_keywords
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def analytics_summary():
+    total = processed_collection.count_documents({})
+
+    sentiment_pipeline = [
+        {"$group": {"_id": "$sentiment", "count": {"$sum": 1}}}
+    ]
+
+    sentiment_data = list(processed_collection.aggregate(sentiment_pipeline))
+
+    keyword_pipeline = [
+        {"$unwind": "$keywords"},
+        {"$group": {"_id": "$keywords", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 5}
+    ]
+
+    top_keywords = list(processed_collection.aggregate(keyword_pipeline))
+
+    return {
+        "total_articles": total,
+        "sentiment_distribution": sentiment_data,
+        "top_keywords": top_keywords
+    }

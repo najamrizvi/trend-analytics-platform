@@ -19,8 +19,8 @@ def get_sentiment(text):
         return "neutral"
 
     text = text.lower()
-    positive_words = {"good", "great", "growth", "profit", "success", "positive", "rise", "boom", "high", "win"}
-    negative_words = {"bad", "loss", "decline", "crisis", "fall", "negative", "war", "fail", "low", "crash"}
+    positive_words = ["good", "great", "growth", "profit", "success", "rise", "improve"]
+    negative_words = ["bad", "loss", "decline", "crisis", "fall", "war", "drop"]
 
     words = set(re.findall(r'\b[a-z]{3,}\b', text))
     
