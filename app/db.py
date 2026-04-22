@@ -1,12 +1,9 @@
 from pymongo import MongoClient
-import os
 
-MONGO_URI = os.getenv("mongodb+srv://najamrizviofficial_db_user:vum08exgHPC0Vs42@cluster0.f9a6nyl.mongodb.net/trend-analytics")
+# 🔴 Hardcode URI (temporary but guaranteed to work)
+MONGO_URI = "MONGO_URI"
 
-if not MONGO_URI:
-    raise Exception("MONGO_URI is not set in environment variables")
-
-client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+client = MongoClient(MONGO_URI)
 
 db = client["trend_db"]
 
