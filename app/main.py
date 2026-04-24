@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from app.routes import router
 
+print("🚀 APP STARTED SUCCESSFULLY")
+
 app = FastAPI()
 
 @app.get("/")
